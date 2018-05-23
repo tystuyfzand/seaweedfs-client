@@ -224,7 +224,7 @@ class SeaweedFS {
             return null;
         }
 
-        $res = $this->client->head($this->buildVolumeUrl($volume->publicUrl, $fid));
+        $res = $this->client->head($this->buildVolumeUrl($volume->getPublicUrl(), $fid));
 
         if ($res->getStatusCode() != 200) {
             return null;
