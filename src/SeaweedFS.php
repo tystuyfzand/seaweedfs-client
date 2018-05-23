@@ -131,7 +131,7 @@ class SeaweedFS {
             throw new SeaweedFSException('File must contain a url and fid');
         }
 
-        $res = $this->client->post($this->buildVolumeUrl($file->publicUrl, $file->fid), [
+        $res = $this->client->post($this->buildVolumeUrl($file->url, $file->fid), [
             'multipart' => [
                 [
                     'name'     => 'file',
