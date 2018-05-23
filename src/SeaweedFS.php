@@ -50,13 +50,31 @@ class SeaweedFS {
     /**
      * Get a volume and file id from the master server.
      *
-     * @param int $count
+     * @param int  $count
+     * @param string|null $collection
+     * @param string|null $replication
+     * @param string|null $dataCenter
      * @return File
      * @throws SeaweedFSException
+     * @see https://github.com/chrislusf/seaweedfs/wiki/Master-Server-API#assign-a-file-key
      */
-    public function assign($count = 1) {
+    public function assign($count = 1, $collection = null, $replication = null, $dataCenter = null) {
+        $assignProperties = [ 'count' => $count ];
+
+        if (!is_null($collection)) {
+            $assignProperties['collection'] = $collection;
+        }
+
+        if (!is_null($replication)) {
+            $assignProperties['replication'] = $replication;
+        }
+
+        if (!is_null($dataCenter)) {
+            $assignProperties['dataCenter'] = $dataCenter;
+        }
+
         $res = $this->client->get($this->buildMasterUrl(self::DIR_ASSIGN), [
-            'query' => [ 'count' => $count ]
+            'query' => $assignProperties
         ]);
 
         if ($res->getStatusCode() != 200) {
