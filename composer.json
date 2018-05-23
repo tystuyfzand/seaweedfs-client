@@ -1,0 +1,20 @@
+{
+    "name": "tystuyfzand/seaweedfs-client",
+    "description": "A SeaweedFS implementation for PHP based on Guzzle",
+    "type": "library",
+    "license": "ISC",
+    "authors": [
+        {
+            "name": "Tyler Stuyfzand",
+            "email": "tyler@tystuyfzand.com"
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "^6.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "SeaweedFS\\": "src/"
+        }
+    }
+}
