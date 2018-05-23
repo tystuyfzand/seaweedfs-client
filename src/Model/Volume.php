@@ -30,7 +30,7 @@ class Volume {
      * @return mixed
      */
     public function getLocation() {
-        return array_random($this->locations);
+        return $this->locations[array_rand($this->locations)];
     }
 
     /**
