@@ -61,7 +61,6 @@ class SeaweedFS {
     public function assign($count = 1, $collection = null, $replication = null, $dataCenter = null) {
         $assignProperties = [ 'count' => $count ];
 
-
         if (!is_null($collection)) {
             $assignProperties['collection'] = $collection;
         }
