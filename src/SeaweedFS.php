@@ -102,11 +102,13 @@ class SeaweedFS {
 
         $body = json_decode((string) $res->getBody());
 
+        $volume = new Volume($body);
+
         if ($this->cache) {
-            $this->cache->put($cacheKey, $body);
+            $this->cache->put($cacheKey, $volume);
         }
 
-        return new Volume($body);
+        return $volume;
     }
 
     /**
