@@ -60,15 +60,20 @@ class SeaweedFS {
      */
     public function assign($count = 1, $collection = null, $replication = null, $dataCenter = null) {
         $assignProperties = [ 'count' => $count ];
+
+
         if (!is_null($collection)) {
             $assignProperties['collection'] = $collection;
         }
+
         if (!is_null($replication)) {
             $assignProperties['replication'] = $replication;
         }
+
         if (!is_null($dataCenter)) {
             $assignProperties['dataCenter'] = $dataCenter;
         }
+
         $res = $this->client->get($this->buildMasterUrl(self::DIR_ASSIGN), [
             'query' => $assignProperties
         ]);
