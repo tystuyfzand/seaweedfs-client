@@ -8,6 +8,7 @@ namespace SeaweedFS\Cache;
  * @package SeaweedFS\Cache
  */
 interface CacheInterface {
+
     /**
      * Check if the cache implementation contains the specified key.
      *
@@ -31,7 +32,7 @@ interface CacheInterface {
      * @param $key
      * @param $value
      * @param int $minutes
-     * @return mixed
+     * @return void
      */
     public function put($key, $value, $minutes = 0);
 
@@ -39,7 +40,7 @@ interface CacheInterface {
      * Remove a value from the cache.
      *
      * @param $key
-     * @return mixed
+     * @return void
      */
     public function remove($key);
 }

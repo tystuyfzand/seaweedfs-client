@@ -16,5 +16,9 @@
         "psr-4": {
             "SeaweedFS\\": "src/"
         }
+    },
+    "suggest": {
+        "predis/predis": "Enables caching for volumes and metadata using redis.",
+        "ext-memcached": "Enables caching for volumes and metadata using memcached."
     }
 }

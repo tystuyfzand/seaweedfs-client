@@ -3,23 +3,24 @@
 namespace SeaweedFS\Cache;
 
 /**
- * A basic cache that uses the Filesystem for storage.
+ * Cache implementation using Memcached.
  *
  * @package SeaweedFS\Cache
  */
-class FileCache implements CacheInterface {
-    /**
-     * @var string Base directory.
-     */
-    private $baseDir;
+class MemcachedCache implements CacheInterface {
 
     /**
-     * Construct a new file backed cache with the specified base directory.
-     *
-     * @param $baseDir
+     * @var \Memcached The Memcached client.
      */
-    public function __construct($baseDir) {
-        $this->baseDir = $baseDir;
+    private $memcached;
+
+    /**
+     * Construct a new Memcached cache interface.
+     *
+     * @param \Memcached $memcached
+     */
+    public function __construct(\Memcached $memcached) {
+        $this->memcached = $memcached;
     }
 
     /**
@@ -29,7 +30,7 @@ class FileCache implements CacheInterface {
      * @return bool
      */
     public function has($key) {
-        return file_exists($this->baseDir . '/' . md5($key));
+        return !is_null($this->get($key));
     }
 
     /**
@@ -40,11 +41,13 @@ class FileCache implements CacheInterface {
      * @return mixed
      */
     public function get($key, $default = null) {
-        if (!$this->has($key)) {
-            return $default;
+        $value = $this->memcached->get($key);
+
+        if ($this->memcached->getResultCode() == 0) {
+            return $value;
         }
 
-        return @unserialize(file_get_contents($this->baseDir . '/' . md5($key))) ?: $default;
+        return $default;
     }
 
     /**
@@ -56,7 +59,7 @@ class FileCache implements CacheInterface {
      * @return void
      */
     public function put($key, $value, $minutes = 0) {
-        file_put_contents($this->baseDir . '/' . md5($key), serialize($value));
+        $this->memcached->set($key, serialize($value), $minutes * 60);
     }
 
     /**
@@ -66,6 +69,6 @@ class FileCache implements CacheInterface {
      * @return void
      */
     public function remove($key) {
-        return unlink($this->baseDir . '/' . md5($key));
+        $this->memcached->delete($key);
     }
 }

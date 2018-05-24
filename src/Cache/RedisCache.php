@@ -2,24 +2,27 @@
 
 namespace SeaweedFS\Cache;
 
+use Predis\Client as RedisClient;
+
 /**
- * A basic cache that uses the Filesystem for storage.
+ * Cache implementation using Predis.
  *
  * @package SeaweedFS\Cache
  */
-class FileCache implements CacheInterface {
-    /**
-     * @var string Base directory.
-     */
-    private $baseDir;
+class RedisCache implements CacheInterface {
 
     /**
-     * Construct a new file backed cache with the specified base directory.
-     *
-     * @param $baseDir
+     * @var RedisClient The redis client instance.
      */
-    public function __construct($baseDir) {
-        $this->baseDir = $baseDir;
+    private $client;
+
+    /**
+     * Construct a new Redis cache.
+     *
+     * @param RedisClient $client
+     */
+    public function __construct(RedisClient $client) {
+        $this->client = $client;
     }
 
     /**
@@ -29,7 +32,7 @@ class FileCache implements CacheInterface {
      * @return bool
      */
     public function has($key) {
-        return file_exists($this->baseDir . '/' . md5($key));
+        return !is_null($this->get($key));
     }
 
     /**
@@ -40,11 +43,9 @@ class FileCache implements CacheInterface {
      * @return mixed
      */
     public function get($key, $default = null) {
-        if (!$this->has($key)) {
-            return $default;
-        }
+        $value = $this->client->get($key);
 
-        return @unserialize(file_get_contents($this->baseDir . '/' . md5($key))) ?: $default;
+        return !is_null($value) ? unserialize($value) : $default;
     }
 
     /**
@@ -56,16 +57,20 @@ class FileCache implements CacheInterface {
      * @return void
      */
     public function put($key, $value, $minutes = 0) {
-        file_put_contents($this->baseDir . '/' . md5($key), serialize($value));
+        if ($minutes == 0) {
+            $this->client->set($key, serialize($value));
+        } else {
+            $this->client->set($key, serialize($value), null, $minutes * 60);
+        }
     }
 
     /**
      * Remove a value from the cache.
      *
      * @param $key
-     * @return void
+     * @return mixed
      */
     public function remove($key) {
-        return unlink($this->baseDir . '/' . md5($key));
+        $this->client->del($key);
     }
 }
