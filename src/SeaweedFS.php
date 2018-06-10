@@ -277,7 +277,7 @@ class SeaweedFS {
             throw new SeaweedFSException('Unable to find volume for ' . $fid);
         }
 
-        $res = $this->client->delete($this->buildVolumeUrl($volume->publicUrl, $fid));
+        $res = $this->client->delete($this->buildVolumeUrl($volume->getUrl(), $fid));
 
         if ($res->getStatusCode() != 202) {
             throw new SeaweedFSException('Unexpected response when deleting file: ' . $res->getStatusCode());

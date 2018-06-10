@@ -27,15 +27,29 @@ class Volume {
     /**
      * Pick a random volume location of the available locations.
      *
-     * @return mixed
+     * @return Location
      */
     public function getLocation() {
         return $this->locations[array_rand($this->locations)];
     }
 
     /**
+     * Get the location's private url
+     * @return string
+     */
+    public function getUrl() {
+        $location = $this->getLocation();
+
+        if (!$location) {
+            throw new \IllegalArgumentException('Unable to find a location to return.');
+        }
+
+        return $location->url;
+    }
+
+    /**
      * Get the location's public url
-     * @return null
+     * @return string
      */
     public function getPublicUrl() {
         $location = $this->getLocation();
