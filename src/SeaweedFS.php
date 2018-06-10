@@ -279,7 +279,7 @@ class SeaweedFS {
 
         $res = $this->client->delete($this->buildVolumeUrl($volume->publicUrl, $fid));
 
-        if ($res->getStatusCode() != 200) {
+        if ($res->getStatusCode() != 202) {
             throw new SeaweedFSException('Unexpected response when deleting file: ' . $res->getStatusCode());
         }
 
